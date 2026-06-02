@@ -441,10 +441,8 @@ const selectedVibes = [
 ];
 
 const ui = {
-  countryInput: document.getElementById("country-input"),
-  countryList: document.getElementById("country-list"),
-  cityInput: document.getElementById("city-input"),
-  cityList: document.getElementById("city-list"),
+  countrySelect: document.getElementById("country-select"),
+  citySelect: document.getElementById("city-select"),
   vibeSelect: document.getElementById("vibe-select"),
   secondaryFilters: document.getElementById("secondary-filters"),
   minRating: document.getElementById("min-rating"),
@@ -463,67 +461,38 @@ function uniqueSorted(values) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
-function fillDatalist(listEl, options) {
-  listEl.innerHTML = "";
-  options.forEach((value) => {
+function initCountryOptions() {
+  const countries = uniqueSorted(shops.map((shop) => shop.country));
+  countries.forEach((country) => {
     const option = document.createElement("option");
-    option.value = value;
-    listEl.appendChild(option);
+    option.value = country;
+    option.textContent = country;
+    ui.countrySelect.appendChild(option);
   });
 }
 
-function matchCanonical(input, options) {
-  const trimmed = input.trim();
-  if (!trimmed) return "";
-  const lower = trimmed.toLowerCase();
-  return options.find((opt) => opt.toLowerCase() === lower) || "";
-}
+function updateCityOptions() {
+  const selectedCountry = ui.countrySelect.value;
+  ui.citySelect.innerHTML = '<option value="">Select city</option>';
 
-function getCountries() {
-  return uniqueSorted(shops.map((shop) => shop.country));
-}
+  if (!selectedCountry) {
+    ui.citySelect.disabled = true;
+    return;
+  }
 
-function getCitiesForCountry(country) {
-  if (!country) return [];
-  return uniqueSorted(
-    shops.filter((shop) => shop.country === country).map((shop) => shop.city)
+  const cities = uniqueSorted(
+    shops
+      .filter((shop) => shop.country === selectedCountry)
+      .map((shop) => shop.city)
   );
-}
 
-function getResolvedCountry() {
-  return matchCanonical(ui.countryInput.value, getCountries());
-}
-
-function getResolvedCity() {
-  const country = getResolvedCountry();
-  if (!country) return "";
-  return matchCanonical(ui.cityInput.value, getCitiesForCountry(country));
-}
-
-function initCountryDatalist() {
-  fillDatalist(ui.countryList, getCountries());
-}
-
-function updateCityDatalist() {
-  const country = getResolvedCountry();
-  const cities = getCitiesForCountry(country);
-  fillDatalist(ui.cityList, cities);
-  ui.cityInput.disabled = !country;
-  if (!country) {
-    ui.cityInput.value = "";
-  }
-}
-
-function syncLocationFromInput() {
-  const country = getResolvedCountry();
-  if (country && ui.countryInput.value.trim().toLowerCase() !== country.toLowerCase()) {
-    ui.countryInput.value = country;
-  }
-  updateCityDatalist();
-  const city = getResolvedCity();
-  if (city && ui.cityInput.value.trim().toLowerCase() !== city.toLowerCase()) {
-    ui.cityInput.value = city;
-  }
+  cities.forEach((city) => {
+    const option = document.createElement("option");
+    option.value = city;
+    option.textContent = city;
+    ui.citySelect.appendChild(option);
+  });
+  ui.citySelect.disabled = false;
 }
 
 function initVibeOptions() {
@@ -536,7 +505,7 @@ function initVibeOptions() {
 }
 
 function hasRequiredSelections() {
-  return Boolean(getResolvedCountry() && getResolvedCity() && ui.vibeSelect.value);
+  return Boolean(ui.countrySelect.value && ui.citySelect.value && ui.vibeSelect.value);
 }
 
 function updateSecondaryFiltersVisibility() {
@@ -548,8 +517,8 @@ function filterShops() {
     return [];
   }
 
-  const selectedCountry = getResolvedCountry();
-  const selectedCity = getResolvedCity();
+  const selectedCountry = ui.countrySelect.value;
+  const selectedCity = ui.citySelect.value;
   const desiredVibe = ui.vibeSelect.value;
   const minRating = Number(ui.minRating.value);
   const minReviews = Number(ui.minReviews.value);
@@ -641,10 +610,9 @@ function syncLabels() {
 }
 
 function resetFilters() {
-  ui.countryInput.value = "";
-  ui.cityInput.value = "";
-  ui.cityInput.disabled = true;
-  updateCityDatalist();
+  ui.countrySelect.value = "";
+  ui.citySelect.innerHTML = '<option value="">Select city</option>';
+  ui.citySelect.disabled = true;
   ui.vibeSelect.value = "";
   ui.minRating.value = "3.0";
   ui.minReviews.value = "0";
@@ -656,30 +624,14 @@ function resetFilters() {
 }
 
 function attachEvents() {
-  ui.countryInput.addEventListener("input", () => {
-    const prevCountry = getResolvedCountry();
-    updateCityDatalist();
-    const nextCountry = getResolvedCountry();
-    if (prevCountry !== nextCountry) {
-      ui.cityInput.value = "";
-    }
+  ui.countrySelect.addEventListener("input", () => {
+    ui.citySelect.value = "";
+    updateCityOptions();
     updateSecondaryFiltersVisibility();
     renderResults();
   });
 
-  ui.countryInput.addEventListener("change", () => {
-    syncLocationFromInput();
-    updateSecondaryFiltersVisibility();
-    renderResults();
-  });
-
-  ui.cityInput.addEventListener("input", () => {
-    updateSecondaryFiltersVisibility();
-    renderResults();
-  });
-
-  ui.cityInput.addEventListener("change", () => {
-    syncLocationFromInput();
+  ui.citySelect.addEventListener("input", () => {
     updateSecondaryFiltersVisibility();
     renderResults();
   });
@@ -700,8 +652,7 @@ function attachEvents() {
 }
 
 initVibeOptions();
-initCountryDatalist();
-updateCityDatalist();
+initCountryOptions();
 attachEvents();
 syncLabels();
 updateSecondaryFiltersVisibility();

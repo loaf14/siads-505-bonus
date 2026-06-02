@@ -50,15 +50,6 @@ input[type="range"] {
   width: 100%;
 }
 
-.typeahead-field {
-  position: relative;
-}
-
-input:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
 .results-header {
   display: flex;
   align-items: center;

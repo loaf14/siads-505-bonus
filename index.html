@@ -16,29 +16,18 @@
       <section class="panel">
         <h2>1) Choose your location and vibe</h2>
         <div class="filters-grid">
-          <div class="field typeahead-field">
-            <label for="country-input">Country</label>
-            <input
-              id="country-input"
-              type="text"
-              list="country-list"
-              placeholder="Start typing a country…"
-              autocomplete="off"
-            />
-            <datalist id="country-list"></datalist>
+          <div class="field">
+            <label for="country-select">Country</label>
+            <select id="country-select">
+              <option value="">Select country</option>
+            </select>
           </div>
 
-          <div class="field typeahead-field">
-            <label for="city-input">City</label>
-            <input
-              id="city-input"
-              type="text"
-              list="city-list"
-              placeholder="Start typing a city…"
-              autocomplete="off"
-              disabled
-            />
-            <datalist id="city-list"></datalist>
+          <div class="field">
+            <label for="city-select">City</label>
+            <select id="city-select" disabled>
+              <option value="">Select city</option>
+            </select>
           </div>
 
           <div class="field">
