@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Cafe Finder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Vibe Cafe Finder</h1>
+        <p>Find coffee shops by vibe, reviews, neighborhood, and touristiness.</p>
+      </header>
+
+      <section class="panel">
+        <h2>1) Start with vibe</h2>
+        <div class="field">
+          <label for="vibe-select">Desired vibe</label>
+          <select id="vibe-select">
+            <option value="">All vibes</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>2) Filter further</h2>
+        <div class="filters-grid">
+          <div class="field">
+            <label for="min-rating">Minimum star rating: <span id="min-rating-value">3.5</span></label>
+            <input id="min-rating" type="range" min="1" max="5" step="0.1" value="3.5" />
+          </div>
+
+          <div class="field">
+            <label for="min-reviews">Minimum review count: <span id="min-reviews-value">100</span></label>
+            <input id="min-reviews" type="range" min="0" max="2000" step="25" value="100" />
+          </div>
+
+          <div class="field">
+            <label for="neighborhood-filter">Neighborhood</label>
+            <input id="neighborhood-filter" type="text" placeholder="e.g., Williamsburg" />
+          </div>
+
+          <div class="field">
+            <label for="max-touristy">Maximum touristiness (1-5): <span id="max-touristy-value">5</span></label>
+            <input id="max-touristy" type="range" min="1" max="5" step="1" value="5" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="results-header">
+          <h2>Matches</h2>
+          <button id="reset-btn" type="button">Reset filters</button>
+        </div>
+        <p id="result-count"></p>
+        <ul id="results-list" class="results-list"></ul>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
