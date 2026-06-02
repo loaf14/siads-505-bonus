@@ -14,16 +14,32 @@
       </header>
 
       <section class="panel">
-        <h2>1) Start with vibe</h2>
-        <div class="field">
-          <label for="vibe-select">Desired vibe</label>
-          <select id="vibe-select">
-            <option value="">All vibes</option>
-          </select>
+        <h2>1) Choose your location and vibe</h2>
+        <div class="filters-grid">
+          <div class="field">
+            <label for="country-select">Country</label>
+            <select id="country-select">
+              <option value="">Select country</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="city-select">City</label>
+            <select id="city-select" disabled>
+              <option value="">Select city</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="vibe-select">Desired vibe</label>
+            <select id="vibe-select">
+              <option value="">Select vibe</option>
+            </select>
+          </div>
         </div>
       </section>
 
-      <section class="panel">
+      <section id="secondary-filters" class="panel hidden">
         <h2>2) Filter further</h2>
         <div class="filters-grid">
           <div class="field">
